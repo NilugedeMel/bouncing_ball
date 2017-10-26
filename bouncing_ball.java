@@ -2,18 +2,14 @@
 import javax.swing.*;
 import java.awt.*;
 
-public class pong {
+public class bouncing_ball {
 
         //  global variables
         private JFrame frame = new JFrame ();
         //  object variables
         public static void main (String [] args) {
-                pong start = new pong ();
+                bouncing_ball start = new bouncing_ball ();
                 start.ball_movement ();
-        }
-
-        JFrame get_frame () {
-                return frame;
         }
 
         void ball_movement () {
@@ -33,7 +29,7 @@ public class pong {
 class ball extends JPanel {
 
         //  global variables
-        pong one = new pong ();
+        bouncing_ball one = new bouncing_ball ();
         //  instance variables
         private int ball_x = 0;
         private int ball_y = 0;
@@ -80,6 +76,21 @@ class ball extends JPanel {
                 return ball_y_speed;
         }
 
+        public void collisions (int z) {
+                if (z == 0) {
+                        set_ball_x_speed (ball_speed ());
+                        set_ball_y_speed (ball_speed ());
+                } else if (z == 1) {
+                        set_ball_x_speed (ball_speed ());
+                        set_ball_y_speed (-(ball_speed ()));
+                } else if (z == 2) {
+                        set_ball_x_speed (-(ball_speed ()));
+                        set_ball_y_speed (ball_speed ());
+                } else if (z == 3) {
+                        set_ball_x_speed (-(ball_speed ()));
+                        set_ball_y_speed (-(ball_speed ()));
+                }
+        }
 
         public ball () {
                 Thread t = new Thread (new Runnable () {
@@ -91,51 +102,42 @@ class ball extends JPanel {
                                         if (get_ball_x () <= 0) {
                                                 //  starting ball movement
                                                 if (get_ball_x () == 0 && get_ball_y () == 0) {
-                                                        set_ball_x_speed (ball_speed ());
-                                                        set_ball_y_speed (ball_speed ());
+                                                        collisions (0);
                                                 }
                                                 //  approaching with a positive y
                                                 if (get_ball_x_speed () < 0 &&  get_ball_y_speed () > 0){
-                                                        set_ball_x_speed (ball_speed ());
-                                                        set_ball_y_speed (ball_speed ());
+                                                        collisions (0);
                                                         //  approaching with a negative y
                                                 } else if (get_ball_x_speed () < 0 && get_ball_y_speed () < 0) {
-                                                        set_ball_x_speed (ball_speed ());
-                                                        set_ball_y_speed (-(ball_speed ()));
+                                                        collisions (1);
                                                 }
 
                                                 //  left wall
                                         } else if (get_ball_y () <= 0) {
                                                 //  approaching with a positive x
                                                 if (get_ball_x_speed () > 0 &&  get_ball_y_speed () < 0){
-                                                        set_ball_x_speed (ball_speed ());
-                                                        set_ball_y_speed (ball_speed ());
+                                                        collisions (0);
                                                         //  approaching with a negative x
                                                 } else if (get_ball_x_speed () < 0 && get_ball_y_speed () < 0) {
-                                                        set_ball_x_speed (-(ball_speed ()));
-                                                        set_ball_y_speed (ball_speed ());
+                                                        collisions (2);
                                                 }
                                                 //  right wall
                                         } else if (get_ball_x () >= 480) {
                                                 //  approaching with a positive y
                                                 if (get_ball_x_speed () > 0 &&  get_ball_y_speed () > 0){
-                                                        set_ball_x_speed (-(ball_speed ()));
-                                                        set_ball_y_speed (ball_speed ());
+                                                        collisions (2);
                                                         //  approaching with a negative y
                                                 } else if (get_ball_x_speed () > 0 && get_ball_y_speed () < 0) {
-                                                        set_ball_x_speed (-(ball_speed ()));
-                                                        set_ball_y_speed (-(ball_speed ()));
+                                                        collisions (3);
                                                 }
                                                 //  bottom wall
                                         } else if (get_ball_y () >= 480) {
                                                 //  approaching with a positive x
                                                 if (get_ball_x_speed () > 0 &&  get_ball_y_speed () > 0){
-                                                        set_ball_x_speed (ball_speed ());
-                                                        set_ball_y_speed (-(ball_speed ()));
+                                                        collisions (1);
                                                         //  approaching with a negative x
                                                 } else if (get_ball_x_speed () < 0 && get_ball_y_speed () > 0) {
-                                                        set_ball_x_speed (-(ball_speed ()));
-                                                        set_ball_y_speed (-(ball_speed ()));
+                                                        collisions (3);
                                                 }
 
                                         }
